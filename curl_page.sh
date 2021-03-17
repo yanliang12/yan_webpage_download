@@ -1,0 +1,16 @@
+curl 'https://www.linkedin.com/company/microsoft/about/' \
+  -H 'authority: www.linkedin.com' \
+  -H 'cache-control: max-age=0' \
+  -H 'sec-ch-ua: "Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'dnt: 1' \
+  -H 'upgrade-insecure-requests: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36' \
+  -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9' \
+  -H 'sec-fetch-site: none' \
+  -H 'sec-fetch-mode: navigate' \
+  -H 'sec-fetch-user: ?1' \
+  -H 'sec-fetch-dest: document' \
+  -H 'accept-language: en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7' \
+  -H 'cookie: li_sugr=7260873b-0035-4571-803b-ee951f8d5233; bcookie="v=2&d3f1b277-f54f-4f8f-81a6-7e121e494e17"; bscookie="v=1&20200617113449e5c9b0ce-49a7-4771-84d6-34888e35241eAQFUaPSAHjvF81sV-YPi6EAqT4Sbsl40"; lissc=1; G_ENABLED_IDPS=google; _ga=GA1.2.2045005029.1592408984; aam_uuid=77563044698852077872557103580406337853; visit=v=1&M; sl="v=1&M4qvQ"; _gcl_au=1.1.690676549.1608229776; VID=V_2021_01_15_11_195; li_rm=AQHHMBJ4FrJJDQAAAXdaLCB38sIXcwacvJ3Wt2Ir-QzUskHAeuB5anXTs7J9b6MGoXHMwRqeEA33WbmKz9Qb-g1LdHnfJjY5utPqMB88t3bxMIEQzLR_cHHB; timezone=Asia/Dubai; li_oatml=AQG3enYbHH_RuQAAAXetaZwTOlo0gTYq0LYUyn0khD_df_01a8jVO3YQJGm2ZP9xmYtMHMup4wq6GHmaFjB_R8shKyeJIVPf; gpv_pn=www.linkedin.com%2Ftalent%2Fpost-a-job; s_tslv=1613766843902; g_state={"i_l":3,"i_p":1617089659827}; _guid=e2a376d3-e45d-471b-971b-ac21ba669748; AnalyticsSyncHistory=AQKkcPGakmfSbgAAAXg0xdw-1XjlJ9xlhYrg0wwi3GUjkcDbdg0Ff0H0wGBZ-WS92z912H42uo3Z84IgnT1fOA; lms_ads=AQHi4nif9O0PXwAAAXg0xd1qCu14ZQ6GWUJpYuZ51H3d5sHgfgz0nl63PJF6iy6Hq1d95p02TsCRuCJVzJUAGLEuHQutOWkc; lms_analytics=AQHi4nif9O0PXwAAAXg0xd1qCu14ZQ6GWUJpYuZ51H3d5sHgfgz0nl63PJF6iy6Hq1d95p02TsCRuCJVzJUAGLEuHQutOWkc; lang=v=2&lang=en-us; _gid=GA1.2.570586395.1616007987; AMCVS_14215E3D5995C57C0A495C55%40AdobeOrg=1; li_at=AQEDATT0GYoEvVFZAAABeEGXLWMAAAF4ZaOxY00AXNh9OL-cBQLYfTkgYe2AdiaiN7bcInWNyTzFNDDj7qxj1bx89TIirQyU7gauljGeJjf0KvxZOEvV_GK7YUGb_Ia558RWodRNdmicC6a7gkftpBSx; JSESSIONID=ajax:6215553547044549812; liap=true; spectroscopyId=656cfdfe-251d-4302-987e-42c3cc6d497c; AMCV_14215E3D5995C57C0A495C55%40AdobeOrg=-637568504%7CMCIDTS%7C18703%7CMCMID%7C77407761897815222082572548333185606390%7CMCAAMLH-1616612932%7C6%7CMCAAMB-1616612932%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1616015332s%7CNONE%7CvVersion%7C5.1.1%7CMCCIDH%7C-1583585158; _gat=1; UserMatchHistory=AQJvrY5dC3HedAAAAXhBmAcdapyXYxfeHnYy2dYhi7StYZ9PXwpUHvm_dkRCQ4QLYHoqllWV4-IcAj35tXbBLLCMOMlGVNXuk0tgvqpjS6Jg_m3R_TQe9tChp-H7snXl2AgRdR7JIazdHIjIqD1cMF0a6jF9aWs59x9SJim11VKS2RchMQ5zcNlCKoUaOQkm6Fy4cos_TCR3GQoWLKj0B-JdTMlMw7wrpGoOxnhVhIbSmkFyAWDMo997ZnKwwhaU3Yk3Om-_kcdFmUZH9RwKwBOJcfqCfufJvUtgeWD6NV0IJQQLXXu0l2fp5YRNvProec_q4hqJjHYy4PcMwa5ncWSSmRxkIw; lidc="b=VGST00:s=V:r=V:a=V:p=V:g=2370:u=1:i=1616008187:t=1616094529:v=2:sig=AQFuQGNp4UbONNIWL2vKYCf9UI6MugTb"' \
+  --compressed
