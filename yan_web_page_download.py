@@ -4,8 +4,8 @@ import os
 import html
 import random
 import pandas
-import hashlib 
 import urllib
+import hashlib 
 
 def download_page_from_url(
 	page_url,
@@ -36,7 +36,13 @@ def download_page_from_url(
 				curl_commend)
 			curl_commend_new += " -o %s"%(temp_html)
 		os.system(curl_commend_new)
-		html_date = open(temp_html).read()
+		try:
+			html_date = open(temp_html).read()
+		except:
+			html_date = open(temp_html, 
+				encoding="cp1251", 
+				errors='ignore'
+				).read()
 		html_date = html.unescape(html_date)
 		try:
 			os.remove(temp_html)
