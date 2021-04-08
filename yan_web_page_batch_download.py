@@ -29,6 +29,53 @@ obs_session = yan_obs.create_obs_session(
 	obs_server = args.obs_server,
 	)
 
+def upload_page_to_obs(
+	page_html,
+	page_url,
+	obs_session,
+	obs_bucketName,
+	obs_path,
+	overwrite = False,
+	):
+	#####
+	company_id_hash = hashlib.md5(page_url.encode()).hexdigest()
+	######
+	if overwrite is True:
+		file_exist =  False
+	else:
+		file_exist = yan_obs.obs_file_exist(
+			obs_bucketName = obs_bucketName,
+			file_name = '%s/%s.json'%(obs_path, company_id_hash),
+			obs_session = obs_session)
+	#####
+	if file_exist is False:
+		try:
+			df = pandas.DataFrame([{
+				'page_url':page_url,
+				'page_url_hash':company_id_hash,
+				'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
+				'page_html':page_html
+				}])
+			print(df)
+			df.to_json(
+				path_or_buf = '%s.json'%(company_id_hash),
+				orient = 'records',
+				lines = True)
+			yan_obs.upload_file_to_obs(
+				obs_bucketName = obs_bucketName,
+				local_file = '%s.json'%(company_id_hash),
+				obs_file_name = '%s/%s.json'%(obs_path, company_id_hash),
+				obs_session = obs_session)
+			os.remove('%s.json'%(company_id_hash))
+			return 'success'
+		except Exception as e:
+			print('failed to upload %s'%(page_url))
+			print(e)
+			return e
+	else:
+		print('%s/%s.json already exists'%(args.obs_path, company_id_hash))
+		return 'exist'
+
 def download_page_from_company_url(
 	page_url,
 	obs_session,
@@ -89,20 +136,22 @@ def get_html_data(r):
 	print(r['status'])
 	return r
 
-if os.path.isfile(args.input_json):
-	input_df = pandas.read_json(
-		path_or_buf = args.input_json,
-		orient = 'records',
-		lines = True)
-	input_df = input_df.apply(get_html_data, axis = 1)
-
-if os.path.isdir(args.input_json):
-	files = [join(args.input_json, f) for f in listdir(args.input_json) if isfile(join(args.input_json, f))]
-	for f in files:
+if __name__ == "__main__":
+	########
+	if os.path.isfile(args.input_json):
 		input_df = pandas.read_json(
-		path_or_buf = f,
-		orient = 'records',
-		lines = True)
+			path_or_buf = args.input_json,
+			orient = 'records',
+			lines = True)
 		input_df = input_df.apply(get_html_data, axis = 1)
+	######
+	if os.path.isdir(args.input_json):
+		files = [join(args.input_json, f) for f in listdir(args.input_json) if isfile(join(args.input_json, f))]
+		for f in files:
+			input_df = pandas.read_json(
+			path_or_buf = f,
+			orient = 'records',
+			lines = True)
+			input_df = input_df.apply(get_html_data, axis = 1)
 
 ##########yan_web_page_batch_download.py##########
