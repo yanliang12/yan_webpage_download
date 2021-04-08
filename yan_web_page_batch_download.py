@@ -153,5 +153,8 @@ if __name__ == "__main__":
 			orient = 'records',
 			lines = True)
 			input_df = input_df.apply(get_html_data, axis = 1)
+			print('removing %s'%(f))
+			os.remove(f)
+			print('%s removed'%(f))
 
 ##########yan_web_page_batch_download.py##########
