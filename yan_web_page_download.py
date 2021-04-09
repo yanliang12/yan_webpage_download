@@ -6,10 +6,18 @@ import random
 import pandas
 import urllib
 import hashlib 
+import requests
 
 def download_page_from_url(
 	page_url,
-	curl_file = None):
+	curl_file = None,
+	redirect = "false"):
+	try:
+		if lower(redirect) == "true":
+			r = requests.get(page_url) 
+			page_url = r.url
+	except:
+		pass
 	try:
 		temp_html = "temp_%f.html"%(random.random())
 		if curl_file is None:

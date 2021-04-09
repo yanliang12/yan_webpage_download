@@ -21,6 +21,7 @@ parser.add_argument('--obs_server')
 parser.add_argument('--obs_bucketName')
 parser.add_argument('--obs_path')
 parser.add_argument('--page_regex')
+parser.add_argument('--redirect')
 args = parser.parse_args()
 
 obs_session = yan_obs.create_obs_session(
@@ -95,6 +96,7 @@ def download_page_from_company_url(
 			html_data = yan_web_page_download.download_page_from_url(
 				page_url = page_url,
 				curl_file = args.curl_file,
+				redirect = args.redirect,
 				)
 			if args.page_regex is not None:
 				re.search(args.page_regex,
