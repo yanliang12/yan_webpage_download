@@ -13,7 +13,7 @@ def download_page_from_url(
 	curl_file = None,
 	redirect = "false"):
 	try:
-		if lower(redirect) == "true":
+		if redirect.lower() == "true":
 			r = requests.get(page_url) 
 			page_url = r.url
 	except:
