@@ -1,12 +1,17 @@
 #######yan_web_page_download.py#######
 import re
 import os
-import html
 import random
 import pandas
 import urllib
 import hashlib 
 import requests
+
+try:
+	import html
+except:
+	import HTMLParser
+	html = HTMLParser.HTMLParser()
 
 def download_page_from_url(
 	page_url,
