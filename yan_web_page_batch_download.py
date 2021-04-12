@@ -99,8 +99,8 @@ def download_page_from_company_url(
 				redirect = args.redirect,
 				)
 			if args.page_regex is not None:
-				re.search(args.page_regex,
-					html_data).group()
+				re.search(args.page_regex, html_data).group()
+			html_head = html_data[0:1]
 			df = pandas.DataFrame([{
 				'page_url':page_url,
 				'page_url_hash':hashlib.md5(page_url.encode()).hexdigest(),
@@ -150,6 +150,7 @@ if __name__ == "__main__":
 	if os.path.isdir(args.input_json):
 		files = [join(args.input_json, f) for f in listdir(args.input_json) if isfile(join(args.input_json, f))]
 		for f in files:
+			print('downloading pages of %s'%(f))
 			input_df = pandas.read_json(
 			path_or_buf = f,
 			orient = 'records',
