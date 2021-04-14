@@ -13,6 +13,9 @@ except:
 	import HTMLParser
 	html = HTMLParser.HTMLParser()
 
+def str_md5(input):
+	return hashlib.md5(input.encode()).hexdigest()
+
 def download_page_from_url(
 	page_url,
 	curl_file = None,
