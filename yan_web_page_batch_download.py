@@ -22,6 +22,7 @@ parser.add_argument('--obs_bucketName')
 parser.add_argument('--obs_path')
 parser.add_argument('--page_regex')
 parser.add_argument('--redirect')
+parser.add_argument('--sleep_second_per_page')
 args = parser.parse_args()
 
 obs_session = yan_obs.create_obs_session(
@@ -93,6 +94,11 @@ def download_page_from_company_url(
 	#####
 	if file_exist is False:
 		try:
+			if args.sleep_second_per_page is not None:
+				try:
+					time.sleep(int(args.sleep_second_per_page))
+				except:
+					pass
 			html_data = yan_web_page_download.download_page_from_url(
 				page_url = page_url,
 				curl_file = args.curl_file,
