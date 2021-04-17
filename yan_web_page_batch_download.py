@@ -133,6 +133,52 @@ def download_page_from_company_url(
 		print('%s/%s.json already exists'%(args.obs_path, company_id_hash))
 		return 'exist'
 
+def sequential_page_download(
+	first_page_url,
+	re_next_page_url,
+	obs_bucketName,
+	obs_path,
+	obs_session,
+	next_page_prefix = None,
+	sleep_second_per_page = None,
+	):
+	next_page_url = first_page_url
+	while(next_page_url is not None):
+		print('\n\ndownloading from %s'%(next_page_url))
+		if sleep_second_per_page is not None:
+			try:
+				time.sleep(int(sleep_second_per_page))
+			except:
+				pass
+		page_html = yan_web_page_download.download_page_from_url(
+				next_page_url)
+		company_id_hash = yan_web_page_download.str_md5(next_page_url)
+		c1 = {}
+		c1['page_html'] = page_html
+		c1['page_url'] = next_page_url
+		df = pandas.DataFrame([c1])
+		df.to_json(
+			path_or_buf = '%s.json'%(company_id_hash),
+			orient = 'records',
+			lines = True)
+		status = yan_obs.upload_file_to_obs(
+			obs_bucketName = obs_bucketName,
+			local_file = '%s.json'%(company_id_hash),
+			obs_file_name = '%s/%s.json'%(obs_path, company_id_hash),
+			obs_session = obs_session)
+		os.remove('%s.json'%(company_id_hash))
+		############		
+		try:
+			next_page_url = re.search(re_next_page_url, 
+				page_html).group('next_page_url')
+			if next_page_prefix is not None:
+				next_page_url = '%s%s'%(next_page_prefix,next_page_url)
+			print('find next page %s'%(next_page_url))
+		except:
+			next_page_url = None
+			print('reach the last page')
+
+
 def get_html_data(r):
 	print('\n\n')
 	r['status'] = download_page_from_company_url(
