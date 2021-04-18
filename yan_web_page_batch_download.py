@@ -78,7 +78,6 @@ def upload_page_to_obs(
 		print('%s/%s.json already exists'%(args.obs_path, company_id_hash))
 		return 'exist'
 
-
 def download_page_from_company_url_and_upload_to_obs(
 	page_url,
 	obs_session,
@@ -231,7 +230,6 @@ def sequential_page_download(
 		except:
 			next_page_url = None
 			print('reach the last page')
-
 
 def get_html_data(r):
 	print('\n\n')
