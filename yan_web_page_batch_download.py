@@ -78,6 +78,60 @@ def upload_page_to_obs(
 		print('%s/%s.json already exists'%(args.obs_path, company_id_hash))
 		return 'exist'
 
+
+def download_page_from_company_url_and_upload_to_obs(
+	page_url,
+	obs_session,
+	obs_bucketName,
+	obs_path,
+	curl_file = None,
+	redirect = None,
+	page_regex = None,
+	):
+	#####
+	company_id_hash = hashlib.md5(page_url.encode()).hexdigest()
+	######
+	file_exist = yan_obs.obs_file_exist(
+		obs_bucketName = obs_bucketName,
+		file_name = '%s/%s.json'%(obs_path, company_id_hash),
+		obs_session = obs_session)
+	#####
+	if file_exist is False:
+		try:
+			html_data = yan_web_page_download.download_page_from_url(
+				page_url = page_url,
+				curl_file = curl_file,
+				redirect = redirect,
+				)
+			if page_regex is not None:
+				re.search(page_regex, html_data).group()
+			html_head = html_data[0:1]
+			df = pandas.DataFrame([{
+				'page_url':page_url,
+				'page_url_hash':hashlib.md5(page_url.encode()).hexdigest(),
+				'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
+				'page_html':html_data
+				}])
+			print(df)
+			df.to_json(
+				path_or_buf = '%s.json'%(company_id_hash),
+				orient = 'records',
+				lines = True)
+			yan_obs.upload_file_to_obs(
+				obs_bucketName = obs_bucketName,
+				local_file = '%s.json'%(company_id_hash),
+				obs_file_name = '%s/%s.json'%(obs_path, company_id_hash),
+				obs_session = obs_session)
+			os.remove('%s.json'%(company_id_hash))
+			return 'success'
+		except Exception as e:
+			print('failed to download %s'%(page_url))
+			print(e)
+			return e
+	else:
+		print('%s/%s.json already exists'%(obs_path, company_id_hash))
+		return 'exist'
+
 def download_page_from_company_url(
 	page_url,
 	obs_session,
