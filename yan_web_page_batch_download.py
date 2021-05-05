@@ -192,6 +192,7 @@ def sequential_page_download(
 	obs_bucketName,
 	obs_path,
 	obs_session,
+	curl_file = None,
 	next_page_prefix = None,
 	sleep_second_per_page = None,
 	):
@@ -204,12 +205,16 @@ def sequential_page_download(
 			except:
 				pass
 		page_html = yan_web_page_download.download_page_from_url(
-				next_page_url)
+				page_url = next_page_url,
+				curl_file = curl_file)
 		company_id_hash = yan_web_page_download.str_md5(next_page_url)
-		c1 = {}
-		c1['page_html'] = page_html
-		c1['page_url'] = next_page_url
-		df = pandas.DataFrame([c1])
+		df = pandas.DataFrame([{
+			'page_url':next_page_url,
+			'page_url_hash':company_id_hash,
+			'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
+			'page_html':page_html
+			}])
+		print(df)
 		df.to_json(
 			path_or_buf = '%s.json'%(company_id_hash),
 			orient = 'records',
@@ -230,6 +235,7 @@ def sequential_page_download(
 		except:
 			next_page_url = None
 			print('reach the last page')
+
 
 def get_html_data(r):
 	print('\n\n')

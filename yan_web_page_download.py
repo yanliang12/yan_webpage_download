@@ -107,9 +107,12 @@ def download_image_from_url(
 	except:
 		return None
 
+
 '''
+from yan_web_page_download import *
+
 file_name = download_image_from_url(
-	page_url = 'https://media-exp1.licdn.com/dms/image/C4D0BAQFjQ2av29r_1Q/company-logo_400_400/0/1589448600484?e=1626912000&v=beta&t=jJlYbU6S7ErXsdhOC9V0y-WnBXzKRKGIrIi463Gz7SM',
+	page_url = 'https://media-exp1.licdn.com/dms/image/C4D0BAQGvaq5AkZaaQg/company-logo_400_400/0/1578207500988?e=1619654400&v=beta&t=18H4hjRBmLSccv8M0_X5GVVqlffG2b6yGXjbWSVgSPs',
 	curl_file = None,
 	redirect = None)
 
