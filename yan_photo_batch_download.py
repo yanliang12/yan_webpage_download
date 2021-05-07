@@ -22,6 +22,7 @@ parser.add_argument('--obs_path_photo_file')
 parser.add_argument('--obs_path_json_file')
 parser.add_argument('--redirect')
 parser.add_argument('--sleep_second_per_page')
+parser.add_argument('--overwrite_exist_file')
 args = parser.parse_args()
 
 obs_session = yan_obs.create_obs_session(
@@ -37,17 +38,19 @@ def download_image_from_url_and_upload_to_obs(
 	obs_path_photo_file,
 	obs_path_json_file,
 	curl_file = None,
-	redirect = None):
+	redirect = None,
+	overwrite_exist_file = None):
 	###
 	url_hash = yan_web_page_download.str_md5(photo_url)
-	###check if already downloaded
-	file_exist = yan_obs.obs_file_exist(
-		obs_bucketName = obs_bucketName,
-		file_name = '%s/%s.json'%(obs_path_json_file, url_hash),
-		obs_session = obs_session)
-	if file_exist is True:
-		print('photo of %s already downloaed.'%(photo_url))
-		return 'exist'
+	if overwrite_exist_file is not None:
+		###check if already downloaded
+		file_exist = yan_obs.obs_file_exist(
+			obs_bucketName = obs_bucketName,
+			file_name = '%s/%s.json'%(obs_path_json_file, url_hash),
+			obs_session = obs_session)
+		if file_exist is True:
+			print('photo of %s already downloaed.'%(photo_url))
+			return 'exist'
 	###download the file
 	file_name = yan_web_page_download.download_image_from_url(
 		photo_url,
@@ -90,7 +93,8 @@ def get_html_data(r):
 	obs_session = obs_session,
 	obs_bucketName = args.obs_bucketName,
 	obs_path_photo_file = args.obs_path_photo_file,
-	obs_path_json_file = args.obs_path_json_file)
+	obs_path_json_file = args.obs_path_json_file,
+	overwrite_exist_file = args.overwrite_exist_file)
 	print(r['status'])
 	return r
 

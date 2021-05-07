@@ -66,7 +66,6 @@ def download_page_from_url(
 	except:
 		return None
 
-
 def download_image_from_url(
 	page_url,
 	curl_file = None,
@@ -112,7 +111,7 @@ def download_image_from_url(
 from yan_web_page_download import *
 
 file_name = download_image_from_url(
-	page_url = 'https://kuwaitlocal.com/img/BusinessLogo/logo_folder/sml_08062015164850_Kiran_technical_Co.jpg',
+	page_url = 'https://www.citysearch.ae/uf/companies/14090/chilis.jpg',
 	curl_file = None,
 	redirect = None)
 
