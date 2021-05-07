@@ -53,14 +53,17 @@ def download_image_from_url_and_upload_to_obs(
 		photo_url,
 		curl_file,
 		redirect)
-	print('downloaded %s successfully'%(str(file_name)))
-	###upload to obs
-	status = yan_obs.upload_file_to_obs(
-		obs_bucketName = obs_bucketName,
-		local_file = file_name,
-		obs_file_name = '%s/%s'%(obs_path_photo_file, file_name),
-		obs_session = obs_session)
-	os.remove(file_name)
+	if file_name is not None:
+		print('downloaded %s successfully'%(str(file_name)))
+		###upload to obs
+		status = yan_obs.upload_file_to_obs(
+			obs_bucketName = obs_bucketName,
+			local_file = file_name,
+			obs_file_name = '%s/%s'%(obs_path_photo_file, file_name),
+			obs_session = obs_session)
+		os.remove(file_name)
+	else:
+		print('failed to download photo')
 	###upload record to obs
 	df = pandas.DataFrame([{
 		'photo_url':photo_url,
