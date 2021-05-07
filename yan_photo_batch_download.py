@@ -31,7 +31,7 @@ obs_session = yan_obs.create_obs_session(
 	)
 
 def download_image_from_url_and_upload_to_obs(
-	page_url,
+	photo_url,
 	obs_session,
 	obs_bucketName,
 	obs_path_photo_file,
@@ -39,18 +39,18 @@ def download_image_from_url_and_upload_to_obs(
 	curl_file = None,
 	redirect = None):
 	###
-	url_hash = yan_web_page_download.str_md5(page_url)
+	url_hash = yan_web_page_download.str_md5(photo_url)
 	###check if already downloaded
 	file_exist = yan_obs.obs_file_exist(
 		obs_bucketName = obs_bucketName,
 		file_name = '%s/%s.json'%(obs_path_json_file, url_hash),
 		obs_session = obs_session)
 	if file_exist is True:
-		print('photo of %s already downloaed.'%(page_url))
+		print('photo of %s already downloaed.'%(photo_url))
 		return 'exist'
 	###download the file
 	file_name = yan_web_page_download.download_image_from_url(
-		page_url,
+		photo_url,
 		curl_file,
 		redirect)
 	print('downloaded %s successfully'%(str(file_name)))
@@ -63,7 +63,7 @@ def download_image_from_url_and_upload_to_obs(
 	os.remove(file_name)
 	###upload record to obs
 	df = pandas.DataFrame([{
-		'page_url':page_url,
+		'photo_url':photo_url,
 		'file_name':file_name,
 		'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d')
 		}])
@@ -83,7 +83,7 @@ def download_image_from_url_and_upload_to_obs(
 def get_html_data(r):
 	print('\n\n')
 	r['status'] = download_image_from_url_and_upload_to_obs(
-	page_url = r['page_url'],
+	photo_url = r['photo_url'],
 	obs_session = obs_session,
 	obs_bucketName = args.obs_bucketName,
 	obs_path_photo_file = args.obs_path_photo_file,
