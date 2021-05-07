@@ -112,11 +112,15 @@ def download_image_from_url(
 from yan_web_page_download import *
 
 file_name = download_image_from_url(
-	page_url = 'https://media-exp1.licdn.com/dms/image/C4D0BAQGvaq5AkZaaQg/company-logo_400_400/0/1578207500988?e=1619654400&v=beta&t=18H4hjRBmLSccv8M0_X5GVVqlffG2b6yGXjbWSVgSPs',
+	page_url = 'https://kuwaitlocal.com/img/BusinessLogo/logo_folder/sml_08062015164850_Kiran_technical_Co.jpg',
 	curl_file = None,
 	redirect = None)
 
 os.system("mv %s /Downloads/"%(file_name))
+
+scp jim@10.1.129.77:/home/jim/24837805ad4e9ed02dcea89df0fdc966.JPEG C:\Users\jywan\Desktop\
+
+pegasus@123
 
 file_name = download_image_from_url(
 	page_url = 'https://www.gravatar.com/avatar/47c20752720b3597f9370f9dcf5e21b4?s=32&d=identicon&r=PG&f=1',
