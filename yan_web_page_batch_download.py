@@ -209,6 +209,7 @@ def sequential_page_download(
 				curl_file = curl_file)
 		company_id_hash = yan_web_page_download.str_md5(next_page_url)
 		df = pandas.DataFrame([{
+			'first_page_url':first_page_url,
 			'page_url':next_page_url,
 			'page_url_hash':company_id_hash,
 			'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
