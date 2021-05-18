@@ -208,9 +208,21 @@ def sequential_page_download(
 				page_url = next_page_url,
 				curl_file = curl_file)
 		company_id_hash = yan_web_page_download.str_md5(next_page_url)
+		############		
+		try:
+			next_page_url = re.search(re_next_page_url, 
+				page_html).group('next_page_url')
+			if next_page_prefix is not None:
+				next_page_url = '%s%s'%(next_page_prefix,next_page_url)
+			print('find next page %s'%(next_page_url))
+		except:
+			next_page_url = None
+			print('reach the last page')
+		#################
 		df = pandas.DataFrame([{
 			'first_page_url':first_page_url,
 			'page_url':next_page_url,
+			'next_page_url':next_page_url,
 			'page_url_hash':company_id_hash,
 			'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
 			'page_html':page_html
@@ -226,17 +238,6 @@ def sequential_page_download(
 			obs_file_name = '%s/%s.json'%(obs_path, company_id_hash),
 			obs_session = obs_session)
 		os.remove('%s.json'%(company_id_hash))
-		############		
-		try:
-			next_page_url = re.search(re_next_page_url, 
-				page_html).group('next_page_url')
-			if next_page_prefix is not None:
-				next_page_url = '%s%s'%(next_page_prefix,next_page_url)
-			print('find next page %s'%(next_page_url))
-		except:
-			next_page_url = None
-			print('reach the last page')
-
 
 def get_html_data(r):
 	print('\n\n')
