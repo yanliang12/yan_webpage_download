@@ -34,6 +34,8 @@ def download_page_from_url(
 			curl_commend = open(curl_file).read()
 			'''
 			replace the page url of the curl file by the input page url
+			new_comment_first_line= u"curl '{}' \ \n".format(page_url)
+			curl_commend_new = re.sub(r'^[^\n]*?\n', new_comment_first_line, curl_commend)
 			'''
 			re_curl_firstline = r'^curl \'(?P<page_url>[^\s]+)\' \\\n'
 			curl_fristline = re.search(re_curl_firstline,
@@ -48,6 +50,7 @@ def download_page_from_url(
 				re.escape(curl_fristline),
 				curl_fristline_replaced,
 				curl_commend)
+			curl_commend_new = curl_commend_new.strip()
 			curl_commend_new += " -o %s"%(temp_html)
 		os.system(curl_commend_new)
 		try:
@@ -114,6 +117,8 @@ file_name = download_image_from_url(
 	page_url = 'https://www.citysearch.ae/uf/companies/14090/chilis.jpg',
 	curl_file = None,
 	redirect = None)
+
+print(file_name)
 
 os.system("mv %s /Downloads/"%(file_name))
 
