@@ -204,8 +204,9 @@ def sequential_page_download(
 				time.sleep(int(sleep_second_per_page))
 			except:
 				pass
+		page_url = next_page_url
 		page_html = yan_web_page_download.download_page_from_url(
-				page_url = next_page_url,
+				page_url = page_url,
 				curl_file = curl_file)
 		company_id_hash = yan_web_page_download.str_md5(next_page_url)
 		############		
@@ -221,7 +222,7 @@ def sequential_page_download(
 		#################
 		df = pandas.DataFrame([{
 			'first_page_url':first_page_url,
-			'page_url':next_page_url,
+			'page_url':page_url,
 			'next_page_url':next_page_url,
 			'page_url_hash':company_id_hash,
 			'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
