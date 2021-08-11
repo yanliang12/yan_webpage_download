@@ -137,11 +137,6 @@ def download_page_from_company_url_and_upload_to_obs(
 		print('%s/%s.json already exists'%(obs_path, company_id_hash))
 		return 'exist'
 
-download_page_from_company_url(
-	page_url = 'https://www.gulftalent.com/uae/jobs/city/abu-dhabi/99',
-	local_path = "/dcd_data/gulftalent",
-	)
-
 def download_page_from_company_url(
 	page_url,
 	obs_session = None,
