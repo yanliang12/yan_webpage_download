@@ -27,14 +27,15 @@ parser.add_argument('--sleep_second_per_page')
 args = parser.parse_args()
 
 
-if args.obs_server is not None:
+try:
 	obs_session = yan_obs.create_obs_session(
 		obs_ak = args.obs_ak,
 		obs_sk = args.obs_sk,
 		obs_server = args.obs_server,
 		)
-else:
+except Exception as e:
 	obs_session = None
+	print(e)
 
 
 def upload_page_to_obs(
@@ -170,6 +171,7 @@ def download_page_from_company_url(
 				path_or_buf = output_json_path,
 				orient = 'records',
 				lines = True)
+			return 'success'
 		except Exception as e:
 			print('failed to download %s'%(page_url))
 			print(e)
