@@ -20,16 +20,22 @@ parser.add_argument('--obs_sk')
 parser.add_argument('--obs_server')
 parser.add_argument('--obs_bucketName')
 parser.add_argument('--obs_path')
+parser.add_argument('--local_path')
 parser.add_argument('--page_regex')
 parser.add_argument('--redirect')
 parser.add_argument('--sleep_second_per_page')
 args = parser.parse_args()
 
-obs_session = yan_obs.create_obs_session(
-	obs_ak = args.obs_ak,
-	obs_sk = args.obs_sk,
-	obs_server = args.obs_server,
-	)
+
+if args.obs_server is not None:
+	obs_session = yan_obs.create_obs_session(
+		obs_ak = args.obs_ak,
+		obs_sk = args.obs_sk,
+		obs_server = args.obs_server,
+		)
+else:
+	obs_session = None
+
 
 def upload_page_to_obs(
 	page_html,
@@ -131,27 +137,22 @@ def download_page_from_company_url_and_upload_to_obs(
 		print('%s/%s.json already exists'%(obs_path, company_id_hash))
 		return 'exist'
 
+download_page_from_company_url(
+	page_url = 'https://www.gulftalent.com/uae/jobs/city/abu-dhabi/99',
+	local_path = "/dcd_data/gulftalent",
+	)
+
 def download_page_from_company_url(
 	page_url,
-	obs_session,
-	obs_bucketName,
-	obs_path,
+	obs_session = None,
+	obs_bucketName = None,
+	obs_path = None,
+	local_path = None,
 	):
 	#####
 	company_id_hash = hashlib.md5(page_url.encode()).hexdigest()
-	######
-	file_exist = yan_obs.obs_file_exist(
-		obs_bucketName = args.obs_bucketName,
-		file_name = '%s/%s.json'%(args.obs_path, company_id_hash),
-		obs_session = obs_session)
-	#####
-	if file_exist is False:
+	if local_path is not None:
 		try:
-			if args.sleep_second_per_page is not None:
-				try:
-					time.sleep(int(args.sleep_second_per_page))
-				except:
-					pass
 			html_data = yan_web_page_download.download_page_from_url(
 				page_url = page_url,
 				curl_file = args.curl_file,
@@ -167,24 +168,65 @@ def download_page_from_company_url(
 				'page_html':html_data
 				}])
 			print(df)
+			output_json_path = '%s/%s.json'%(
+					local_path,
+					company_id_hash)
 			df.to_json(
-				path_or_buf = '%s.json'%(company_id_hash),
+				path_or_buf = output_json_path,
 				orient = 'records',
 				lines = True)
-			yan_obs.upload_file_to_obs(
-				obs_bucketName = args.obs_bucketName,
-				local_file = '%s.json'%(company_id_hash),
-				obs_file_name = '%s/%s.json'%(args.obs_path, company_id_hash),
-				obs_session = obs_session)
-			os.remove('%s.json'%(company_id_hash))
-			return 'success'
 		except Exception as e:
 			print('failed to download %s'%(page_url))
 			print(e)
 			return e
-	else:
-		print('%s/%s.json already exists'%(args.obs_path, company_id_hash))
-		return 'exist'
+	##########
+	if obs_path is not None:
+		######
+		file_exist = yan_obs.obs_file_exist(
+			obs_bucketName = args.obs_bucketName,
+			file_name = '%s/%s.json'%(args.obs_path, company_id_hash),
+			obs_session = obs_session)
+		#####
+		if file_exist is False:
+			try:
+				if args.sleep_second_per_page is not None:
+					try:
+						time.sleep(int(args.sleep_second_per_page))
+					except:
+						pass
+				html_data = yan_web_page_download.download_page_from_url(
+					page_url = page_url,
+					curl_file = args.curl_file,
+					redirect = args.redirect,
+					)
+				if args.page_regex is not None:
+					re.search(args.page_regex, html_data).group()
+				html_head = html_data[0:1]
+				df = pandas.DataFrame([{
+					'page_url':page_url,
+					'page_url_hash':hashlib.md5(page_url.encode()).hexdigest(),
+					'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
+					'page_html':html_data
+					}])
+				print(df)
+				df.to_json(
+					path_or_buf = '%s.json'%(company_id_hash),
+					orient = 'records',
+					lines = True)
+				yan_obs.upload_file_to_obs(
+					obs_bucketName = args.obs_bucketName,
+					local_file = '%s.json'%(company_id_hash),
+					obs_file_name = '%s/%s.json'%(args.obs_path, company_id_hash),
+					obs_session = obs_session)
+				os.remove('%s.json'%(company_id_hash))
+				return 'success'
+			except Exception as e:
+				print('failed to download %s'%(page_url))
+				print(e)
+				return e
+		else:
+			print('%s/%s.json already exists'%(args.obs_path, company_id_hash))
+			return 'exist'
 
 def sequential_page_download(
 	first_page_url,
@@ -242,12 +284,18 @@ def sequential_page_download(
 
 def get_html_data(r):
 	print('\n\n')
-	r['status'] = download_page_from_company_url(
-		page_url = r['page_url'],
-		obs_session = obs_session,
-		obs_bucketName = args.obs_bucketName,
-		obs_path = args.obs_path,
-		)
+	if args.obs_path is not None:
+		r['status'] = download_page_from_company_url(
+			page_url = r['page_url'],
+			obs_session = obs_session,
+			obs_bucketName = args.obs_bucketName,
+			obs_path = args.obs_path,
+			)
+	else:
+		r['status'] = download_page_from_company_url(
+			page_url = r['page_url'],
+			local_path = args.local_path,
+			)
 	print(r['status'])
 	return r
 
