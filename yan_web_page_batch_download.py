@@ -316,7 +316,10 @@ if __name__ == "__main__":
 		input_df = input_df.apply(get_html_data, axis = 1)
 	######
 	if os.path.isdir(args.input_json):
-		files = [join(args.input_json, f) for f in listdir(args.input_json) if isfile(join(args.input_json, f))]
+		files = [join(args.input_json, f) 
+			for f in listdir(args.input_json) 
+			if isfile(join(args.input_json, f))
+			and bool(re.search(r'.+\.json$', f))]
 		for f in files:
 			print('downloading pages of %s'%(f))
 			input_df = pandas.read_json(
