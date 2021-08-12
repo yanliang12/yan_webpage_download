@@ -7,7 +7,7 @@ import hashlib
 import argparse
 import datetime
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, exists
 
 import yan_obs
 import yan_web_page_download 
@@ -138,6 +138,9 @@ def download_page_from_company_url_and_upload_to_obs(
 		print('%s/%s.json already exists'%(obs_path, company_id_hash))
 		return 'exist'
 
+path.exists("guru99.txt")
+
+
 def download_page_from_company_url(
 	page_url,
 	obs_session = None,
@@ -148,35 +151,49 @@ def download_page_from_company_url(
 	#####
 	company_id_hash = hashlib.md5(page_url.encode()).hexdigest()
 	if local_path is not None:
-		try:
-			html_data = yan_web_page_download.download_page_from_url(
-				page_url = page_url,
-				curl_file = args.curl_file,
-				redirect = args.redirect,
-				)
-			if args.page_regex is not None:
-				re.search(args.page_regex, html_data).group()
-			html_head = html_data[0:1]
-			df = pandas.DataFrame([{
-				'page_url':page_url,
-				'page_url_hash':hashlib.md5(page_url.encode()).hexdigest(),
-				'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
-				'page_html':html_data
-				}])
-			print(df)
-			output_json_path = '%s/%s.json'%(
-					local_path,
-					company_id_hash)
-			df.to_json(
-				path_or_buf = output_json_path,
-				orient = 'records',
-				lines = True)
-			return 'success'
-		except Exception as e:
-			print('failed to download %s'%(page_url))
-			print(e)
-			return e
-	##########
+		json_file_path = '%s/%s.json'%(
+			local_path,
+			company_id_hash
+			)
+		file_exist = exists(json_file_path)
+		if file_exist is False:
+			try:
+				if args.sleep_second_per_page is not None:
+					try:
+						time.sleep(int(args.sleep_second_per_page))
+					except:
+						pass
+				html_data = yan_web_page_download.download_page_from_url(
+					page_url = page_url,
+					curl_file = args.curl_file,
+					redirect = args.redirect,
+					)
+				if args.page_regex is not None:
+					re.search(args.page_regex, html_data).group()
+				html_head = html_data[0:1]
+				df = pandas.DataFrame([{
+					'page_url':page_url,
+					'page_url_hash':hashlib.md5(page_url.encode()).hexdigest(),
+					'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
+					'page_html':html_data
+					}])
+				print(df)
+				output_json_path = '%s/%s.json'%(
+						local_path,
+						company_id_hash)
+				df.to_json(
+					path_or_buf = output_json_path,
+					orient = 'records',
+					lines = True)
+				return 'success'
+			except Exception as e:
+				print('failed to download %s'%(page_url))
+				print(e)
+				return e
+		else:
+			print('%s already exists'%(json_file_path))
+			return 'exist'
+	####################
 	if obs_path is not None:
 		######
 		file_exist = yan_obs.obs_file_exist(
