@@ -157,6 +157,7 @@ def download_page_from_company_url(
 			try:
 				if args.sleep_second_per_page is not None:
 					try:
+						print('sleeping for %d s'%(int(args.sleep_second_per_page)))
 						time.sleep(int(args.sleep_second_per_page))
 					except:
 						pass
