@@ -138,9 +138,6 @@ def download_page_from_company_url_and_upload_to_obs(
 		print('%s/%s.json already exists'%(obs_path, company_id_hash))
 		return 'exist'
 
-path.exists("guru99.txt")
-
-
 def download_page_from_company_url(
 	page_url,
 	obs_session = None,
