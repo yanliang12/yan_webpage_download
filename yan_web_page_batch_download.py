@@ -228,9 +228,10 @@ def download_page_from_company_url(
 def sequential_page_download(
 	first_page_url,
 	re_next_page_url,
-	obs_bucketName,
-	obs_path,
-	obs_session,
+	obs_bucketName = None,
+	obs_path = None,
+	obs_session = None,
+	local_path = None,
 	curl_file = None,
 	next_page_prefix = None,
 	sleep_second_per_page = None,
@@ -268,16 +269,25 @@ def sequential_page_download(
 			'page_html':page_html
 			}])
 		print(df)
-		df.to_json(
-			path_or_buf = '%s.json'%(company_id_hash),
-			orient = 'records',
-			lines = True)
-		status = yan_obs.upload_file_to_obs(
-			obs_bucketName = obs_bucketName,
-			local_file = '%s.json'%(company_id_hash),
-			obs_file_name = '%s/%s.json'%(obs_path, company_id_hash),
-			obs_session = obs_session)
-		os.remove('%s.json'%(company_id_hash))
+		if local_path is not None:
+			json_path = '%s/%s.json'%(
+				local_path,
+				company_id_hash)			
+			df.to_json(
+				path_or_buf = json_path,
+				orient = 'records',
+				lines = True)
+		if obs_session is not None:
+			df.to_json(
+				path_or_buf = '%s.json'%(company_id_hash),
+				orient = 'records',
+				lines = True)
+			status = yan_obs.upload_file_to_obs(
+				obs_bucketName = obs_bucketName,
+				local_file = '%s.json'%(company_id_hash),
+				obs_file_name = '%s/%s.json'%(obs_path, company_id_hash),
+				obs_session = obs_session)
+			os.remove('%s.json'%(company_id_hash))
 
 def get_html_data(r):
 	print('\n\n')
