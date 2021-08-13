@@ -321,7 +321,7 @@ def get_html_data(r):
 	print(r['status'])
 	return r
 
-if __name__ == "__main__":
+def main():
 	########
 	if os.path.isfile(args.input_json):
 		input_df = pandas.read_json(
@@ -344,6 +344,9 @@ if __name__ == "__main__":
 			input_df = input_df.apply(get_html_data, axis = 1)
 			print('removing %s'%(f))
 			os.remove(f)
-			print('%s removed'%(f))
+			print('%s removed'%(f))	
+
+if __name__ == "__main__":
+	main()
 
 ##########yan_web_page_batch_download.py##########
