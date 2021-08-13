@@ -23,6 +23,7 @@ parser.add_argument('--obs_path')
 parser.add_argument('--local_path')
 parser.add_argument('--page_regex')
 parser.add_argument('--redirect')
+parser.add_argument('--overwrite')
 parser.add_argument('--sleep_second_per_page')
 args = parser.parse_args()
 
@@ -152,7 +153,10 @@ def download_page_from_company_url(
 			local_path,
 			company_id_hash
 			)
-		file_exist = exists(json_file_path)
+		if args.overwrite is not None:
+			file_exist = False
+		else:
+			file_exist = exists(json_file_path)
 		if file_exist is False:
 			try:
 				if args.sleep_second_per_page is not None:
@@ -194,10 +198,13 @@ def download_page_from_company_url(
 	####################
 	if obs_path is not None:
 		######
-		file_exist = yan_obs.obs_file_exist(
-			obs_bucketName = args.obs_bucketName,
-			file_name = '%s/%s.json'%(args.obs_path, company_id_hash),
-			obs_session = obs_session)
+		if args.overwrite is not None:
+			file_exist = False
+		else:
+			file_exist = yan_obs.obs_file_exist(
+				obs_bucketName = args.obs_bucketName,
+				file_name = '%s/%s.json'%(args.obs_path, company_id_hash),
+				obs_session = obs_session)
 		#####
 		if file_exist is False:
 			try:
