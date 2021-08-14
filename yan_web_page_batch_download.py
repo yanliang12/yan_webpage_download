@@ -2,6 +2,7 @@
 import os
 import re
 import time
+import pytz
 import pandas
 import hashlib 
 import argparse
@@ -63,7 +64,7 @@ def upload_page_to_obs(
 			df = pandas.DataFrame([{
 				'page_url':page_url,
 				'page_url_hash':company_id_hash,
-				'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
+				'crawling_date': datetime.datetime.now(pytz.timezone('Asia/Dubai')).strftime("%Y-%m-%d"),
 				'page_html':page_html
 				}])
 			print(df)
@@ -116,7 +117,7 @@ def download_page_from_company_url_and_upload_to_obs(
 			df = pandas.DataFrame([{
 				'page_url':page_url,
 				'page_url_hash':hashlib.md5(page_url.encode()).hexdigest(),
-				'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
+				'crawling_date': datetime.datetime.now(pytz.timezone('Asia/Dubai')).strftime("%Y-%m-%d"),
 				'page_html':html_data
 				}])
 			print(df)
@@ -176,7 +177,7 @@ def download_page_from_company_url(
 				df = pandas.DataFrame([{
 					'page_url':page_url,
 					'page_url_hash':hashlib.md5(page_url.encode()).hexdigest(),
-					'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
+					'crawling_date': datetime.datetime.now(pytz.timezone('Asia/Dubai')).strftime("%Y-%m-%d"),
 					'page_html':html_data
 					}])
 				print(df)
@@ -224,7 +225,7 @@ def download_page_from_company_url(
 				df = pandas.DataFrame([{
 					'page_url':page_url,
 					'page_url_hash':hashlib.md5(page_url.encode()).hexdigest(),
-					'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
+					'crawling_date': datetime.datetime.now(pytz.timezone('Asia/Dubai')).strftime("%Y-%m-%d"),
 					'page_html':html_data
 					}])
 				print(df)
@@ -287,7 +288,7 @@ def sequential_page_download(
 			'page_url':page_url,
 			'next_page_url':next_page_url,
 			'page_url_hash':company_id_hash,
-			'crawling_date': datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d'),
+			'crawling_date': datetime.datetime.now(pytz.timezone('Asia/Dubai')).strftime("%Y-%m-%d"),
 			'page_html':page_html
 			}])
 		print(df)
