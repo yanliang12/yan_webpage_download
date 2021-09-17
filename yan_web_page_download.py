@@ -71,6 +71,7 @@ def download_page_from_url(
 
 def download_image_from_url(
 	page_url,
+	photo_folder = None,
 	curl_file = None,
 	redirect = None):
 	if redirect is not None:
@@ -105,28 +106,29 @@ def download_image_from_url(
 		url_hash = str_md5(page_url)
 		file_name = '%s.%s'%(url_hash,image_end)
 		os.rename(temp_html, file_name)
-		return file_name
+		if photo_folder is not None:
+			os.system("mv {} {}/".format(file_name,photo_folder))
+			return "{}/{}".format(
+				photo_folder,
+				file_name)
+		else:
+			return file_name
 	except:
 		return None
 
 
 '''
 from yan_web_page_download import *
-
 file_name = download_image_from_url(
 	page_url = 'https://www.citysearch.ae/uf/companies/14090/chilis.jpg',
 	curl_file = None,
 	redirect = None)
-
 print(file_name)
-
 os.system("mv %s /Downloads/"%(file_name))
-
 file_name = download_image_from_url(
 	page_url = 'https://www.gravatar.com/avatar/47c20752720b3597f9370f9dcf5e21b4?s=32&d=identicon&r=PG&f=1',
 	curl_file = None,
 	redirect = None)
-
 os.system("mv %s /Downloads/"%(file_name))
 '''
 #######yan_web_page_download.py#######
