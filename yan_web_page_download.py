@@ -69,11 +69,46 @@ def download_page_from_url(
 	except:
 		return None
 
+image_format_ends = [
+	'JPEG',
+	'JPG',
+	'PNG',
+	'GIF',
+	'TIFF',
+	'PSD',
+	'PDF',
+	'EPS',
+	'AI',
+	'INDD',
+	'RAW',
+]
+
+'''
+download_image_from_url(
+	page_url = page_url,
+	photo_folder = '/dcd_data/linkedin/profile_photo',
+	curl_file = None,
+	redirect = None,
+	overwrite = False,
+	)
+'''
+
 def download_image_from_url(
 	page_url,
 	photo_folder = None,
 	curl_file = None,
-	redirect = None):
+	redirect = None,
+	overwrite = False,
+	):
+	url_hash = str_md5(page_url)
+	if overwrite is False:
+		for e in image_format_ends:
+			file_name = '{}/{}.{}'.format(photo_folder, url_hash, e)
+			if os.path.exists(file_name):
+				print('\n{} already exists'.format(file_name))
+				return file_name
+	file_name = None
+	print('\ndownloading image from {}'.format(page_url))
 	if redirect is not None:
 		page_url = requests.get(page_url).url
 	temp_html = "temp_%f"%(random.random())
@@ -103,7 +138,6 @@ def download_image_from_url(
 			curl_commend_new += " -o %s"%(temp_html)
 		os.system(curl_commend_new)
 		image_end = Image.open(temp_html).format
-		url_hash = str_md5(page_url)
 		file_name = '%s.%s'%(url_hash,image_end)
 		os.rename(temp_html, file_name)
 		if photo_folder is not None:
