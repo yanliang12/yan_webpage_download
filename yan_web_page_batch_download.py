@@ -101,7 +101,11 @@ def download_page_from_company_url_and_upload_to_obs(
 	page_regex = None,
 	):
 	#####
-	company_id_hash = hashlib.md5(page_url.encode()).hexdigest()
+	try:
+		company_id_hash = hashlib.md5(page_url.encode()).hexdigest()
+	except Exception as e:
+		print(e)
+		return e
 	######
 	file_exist = yan_obs.obs_file_exist(
 		obs_bucketName = obs_bucketName,
@@ -151,8 +155,13 @@ def download_page_from_company_url(
 	obs_path = None,
 	local_path = None,
 	):
+	##########
+	try:
+		company_id_hash = hashlib.md5(page_url.encode()).hexdigest()
+	except Exception as e:
+		print(e)
+		return e
 	#####
-	company_id_hash = hashlib.md5(page_url.encode()).hexdigest()
 	if local_path is not None:
 		json_file_path = '%s/%s.json'%(
 			local_path,
