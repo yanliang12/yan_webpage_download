@@ -48,9 +48,13 @@ def upload_page_to_obs(
 	obs_path,
 	overwrite = False,
 	):
-	#####
-	company_id_hash = hashlib.md5(page_url.encode()).hexdigest()
-	######
+	#####has the page url
+	try:
+		company_id_hash = hashlib.md5(page_url.encode()).hexdigest()
+	except Exception as e:
+		print(e)
+		return e
+	######check if the page has been downloaded
 	if overwrite is True:
 		file_exist =  False
 	else:
