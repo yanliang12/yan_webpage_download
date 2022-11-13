@@ -7,8 +7,6 @@ import urllib
 import hashlib 
 import requests
 
-from PIL import Image
-
 try:
 	import html
 except:
