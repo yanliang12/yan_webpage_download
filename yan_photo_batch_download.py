@@ -10,6 +10,7 @@ from os.path import isfile, join
 
 import yan_obs
 import yan_web_page_download 
+import yan_photo_download 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--input_json')
